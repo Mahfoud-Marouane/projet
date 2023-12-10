@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  conteneur-mysql:
+    image: localhost:5000/registry-mysql:latest
+    container_name: conteneur-mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - reseau
+    volumes:
+      - mysql-sata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345678"
+      MYSQL_DATABASE: "db"
+  backend:
+    image: localhost:5000/registry-backend:latest
+    container_name: backend
+    ports:
+      - "8080:8080"
+    networks:
+      - reseau
+    depends_on:
+      - conteneur-mysql
+  frontend:
+    image: localhost:5000/registry-frontend:latest
+    container_name: frontend
+    ports:
+      - "8081:80"
+    networks:
+      - reseau
+    depends_on:
+      - backend
+volumes:
+  mysql-sata:
+    driver: local
+networks:
+  reseau: 
+    driver: bridge
+  
